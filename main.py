@@ -13,18 +13,8 @@ import os
 import glob
 import random
 
-def empty_attempts_folder():
-    files = glob.glob('./attempts/*')
-    for f in files:
-        os.remove(f)
-
-def empty_attempts():
-    files = glob.glob('./attempts/*')
-    for f in files:
-        os.remove(f)
 
 def main():
-    empty_attempts_folder()
     parser = argparse.ArgumentParser()
     parser.add_argument('--num_rows', help='The number of rows of the checkboard. INT', default=8)
     parser.add_argument('--num_columns', help='The number of columns of the checkboard. INT', default=8)
@@ -34,54 +24,40 @@ def main():
     parser.add_argument('--p1', help='Select agent for player 1 to use.', default=human_player())
     parser.add_argument('--p2', help='Select agent for player 2 to use.', default=human_player())
     args = parser.parse_args()
-    p1 = random_bot()
-    p2 = random_bot()
+    p1 = human_player()
+    p2 = human_player()
     if(args.num_columns % 2 == 1 and args.num_rows % 2 == 0):
         warning_len = len("# WARNING: If the number of columns is uneven and the number of rows is even the board is not symmetrical. #")
         print("#"*warning_len)
         print("# WARNING: If the number of columns is uneven and the number of rows is even the board is not symmetrical. #\n# To assure an equal number of pieces, set the number of vertical pieces to an even value.                 #")
         print("#"*warning_len)
         time.sleep(5)
-    file = open("./temp.txt", "a")
     # for rule in [CheckersRules.CLASSICAL, CheckersRules.QUANTUM_V1, CheckersRules.QUANTUM_V2]:
     #     for size in [10, 12, 14]:
     size = 5
-    rule = CheckersRules.CLASSICAL
-    times = []
-    results = []
-    number_of_moves = []
-    file.write("#"*100 + "\n")
-    file.write(f"Size: {size}x{size}, Rule: {rule}\n")
-    print(f"Size: {size}x{size}, Rule: {rule}")
-    for i in range(100):
-        # if((i+1)%50 == 0):
-        print(f"Game {i+1}")
-        start_t = time.time()
-        checkers = Checkers(num_vertical=size, num_horizontal=size, num_vertical_pieces=args.num_vertical_pieces, SIMULATE_QUANTUM=args.sim_q, rules=rule)
-        game = GameInterface(checkers, white_player=p1, black_player=p2, GUI=args.GUI, white_mcts=False, black_mcts=True, print=False, attempt=i)
-        result, num_moves = (game.play())
-        results.append(result)
-        if(result == CheckersResult.WHITE_WINS):
-            print(f"########################### White wins at {i}")
-        number_of_moves.append(num_moves)
-        times.append(time.time()-start_t)
-        #if((i+1)%100 == 0):
-        #    print(f"Draw: {results.count(CheckersResult.DRAW)}, White wins: {results.count(CheckersResult.WHITE_WINS)}, Black wins: {results.count(CheckersResult.BLACK_WINS)}")
-        #    print(f"Average number of moves: {sum(number_of_moves)/len(number_of_moves)}")
-    print("#"*100)
-    print(f"Average time: {sum(times)/len(times)}, minimum time: {min(times)}, max time: {max(times)}")
-    print(f"Average number of moves: {sum(number_of_moves)/len(number_of_moves)}")
-    print(f"Draw: {results.count(CheckersResult.DRAW)}, White wins: {results.count(CheckersResult.WHITE_WINS)}, Black wins: {results.count(CheckersResult.BLACK_WINS)}")
-    file.write(f"Average time: {sum(times)/len(times)}, minimum time: {min(times)}, max time: {max(times)}\n")
-    file.write(f"Average number of moves: {sum(number_of_moves)/len(number_of_moves)}\n")
-    file.write(f"Draw: {results.count(CheckersResult.DRAW)}, White wins: {results.count(CheckersResult.WHITE_WINS)}, Black wins: {results.count(CheckersResult.BLACK_WINS)}\n")
-    file.close()
+    selected = False
+    while not selected:
+        inp = input(f'Select what rule to use:\n1. Classical\n2. Quantum V1 (superpositions)\n3. Quantum V2(Simple entanglement)\n4. Quantum V3 (Entanglement)\n')
+        try:
+            inp = int(inp)
+        except:
+            print("Input has to be an integer!")
+            continue
+        if(inp > 4 or inp < 1):
+            print(f"Input has to be an integer between 1 and 4!")
+            continue
+        selected = True
+        if(inp == 1): rule = CheckersRules.CLASSICAL
+        elif(inp == 2): rule = CheckersRules.QUANTUM_V1
+        elif(inp == 3): rule = CheckersRules.QUANTUM_V2
+        elif(inp == 4): rule = CheckersRules.QUANTUM_V3
+       
+    checkers = Checkers(num_vertical=size, num_horizontal=size, num_vertical_pieces=args.num_vertical_pieces, SIMULATE_QUANTUM=args.sim_q, rules=rule)
+    game = GameInterface(checkers, white_player=p1, black_player=p2, GUI=args.GUI)
+    _, _ = (game.play())
 
 if __name__ == "__main__":
     main()
 
 # Generate prof:  python3 -m cProfile -o main.prof main.py
 # Visualise prof: snakeviz main.prof
-
-# TODO:
-# RETURN ALL POSSIBLE STATES WERKT NIET

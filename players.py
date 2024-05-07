@@ -1,6 +1,5 @@
 from random import randint
 import traceback
-from mcts import MCTS
 
 class bot():
     def __init__(self) -> None:

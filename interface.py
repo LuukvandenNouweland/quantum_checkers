@@ -16,7 +16,6 @@ import time
 # GUI
 import pygame
 import sys
-from mcts import MCTS
 from copy import deepcopy
 # https://quantumchess.net/play/
 # https://entanglement-chess.netlify.app/qm

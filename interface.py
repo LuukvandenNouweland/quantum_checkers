@@ -130,7 +130,7 @@ class GameInterface:
                         # Detect swipes for quantum moves
                         moved, _ = self.handle_click(down_pos, event.pos)
                         if(moved):
-                            self.print_board()
+                            self.print_board(False)
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_c:
                             self.draw_chance = True if self.draw_chance == False else False

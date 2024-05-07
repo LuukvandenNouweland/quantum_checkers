@@ -35,9 +35,23 @@ def main():
     # for rule in [CheckersRules.CLASSICAL, CheckersRules.QUANTUM_V1, CheckersRules.QUANTUM_V2]:
     #     for size in [10, 12, 14]:
     size = 5
-    rule = CheckersRules.CLASSICAL
+    selected = False
+    while not selected:
+        inp = input(f'Select what rule to use:\n1. Classical\n2. Quantum V1 (superpositions)\n3. Quantum V2(Simple entanglement)\n4. Quantum V3 (Entanglement)\n')
+        try:
+            inp = int(inp)
+        except:
+            print("Input has to be an integer!")
+            continue
+        if(inp > 4 or inp < 1):
+            print(f"Input has to be an integer between 1 and 4!")
+            continue
+        selected = True
+        if(inp == 1): rule = CheckersRules.CLASSICAL
+        elif(inp == 2): rule = CheckersRules.QUANTUM_V1
+        elif(inp == 3): rule = CheckersRules.QUANTUM_V2
+        elif(inp == 4): rule = CheckersRules.QUANTUM_V3
        
-    start_t = time.time()
     checkers = Checkers(num_vertical=size, num_horizontal=size, num_vertical_pieces=args.num_vertical_pieces, SIMULATE_QUANTUM=args.sim_q, rules=rule)
     game = GameInterface(checkers, white_player=p1, black_player=p2)
     _, _ = (game.play())

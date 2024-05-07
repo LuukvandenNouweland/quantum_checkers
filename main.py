@@ -24,8 +24,8 @@ def main():
     parser.add_argument('--p1', help='Select agent for player 1 to use.', default=human_player())
     parser.add_argument('--p2', help='Select agent for player 2 to use.', default=human_player())
     args = parser.parse_args()
-    p1 = human_player()
-    p2 = human_player()
+    p1 = random_bot()
+    p2 = random_bot()
     if(args.num_columns % 2 == 1 and args.num_rows % 2 == 0):
         warning_len = len("# WARNING: If the number of columns is uneven and the number of rows is even the board is not symmetrical. #")
         print("#"*warning_len)
@@ -37,7 +37,7 @@ def main():
     size = 5
     selected = False
     while not selected:
-        inp = input(f'Select what rule to use:\n1. Classical\n2. Quantum V1 (superpositions)\n3. Quantum V2(Simple entanglement)\n4. Quantum V3 (Entanglement)\n')
+        inp = input(f'Select what rule to use:\n1. Classical\n2. Quantum V1 (superpositions)\n3. Quantum V2 (Simple entanglement)\n4. Quantum V3 (Entanglement)\n')
         try:
             inp = int(inp)
         except:
@@ -51,7 +51,6 @@ def main():
         elif(inp == 2): rule = CheckersRules.QUANTUM_V1
         elif(inp == 3): rule = CheckersRules.QUANTUM_V2
         elif(inp == 4): rule = CheckersRules.QUANTUM_V3
-       
     checkers = Checkers(num_vertical=size, num_horizontal=size, num_vertical_pieces=args.num_vertical_pieces, SIMULATE_QUANTUM=args.sim_q, rules=rule)
     game = GameInterface(checkers, white_player=p1, black_player=p2, GUI=args.GUI)
     _, _ = (game.play())

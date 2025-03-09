@@ -305,6 +305,13 @@ def play_normal_game():
     parser.add_argument('--p1', help='Select agent for player 1 to use.', default=human_player())
     parser.add_argument('--p2', help='Select agent for player 2 to use.', default=human_player())
     args = parser.parse_args()
+    try:
+        args.num_rows = int(args.num_rows)
+        args.num_columns = int(args.num_columns)
+        args.num_vertical_pieces = int(args.num_vertical_pieces)
+    except:
+        print("No numerical values for board size and number of vertical pieces. Please enter numerical values.")
+        return
     # p1 = random_bot()
     p2 = random_bot()
     p1 = heuristic_bot()
